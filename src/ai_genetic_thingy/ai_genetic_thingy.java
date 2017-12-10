@@ -88,10 +88,10 @@ public class ai_genetic_thingy {
 			}
 			
 			// Check for ascending diagonal wins
-			for (int col= 0; col < 3; col++) {
+			for (int col= 0; col < 4; col++) {
 				for (int row = 5; row > 2; row--) {
 					if (board[row][col] != '*' && board[row][col] == board[row-1][col+1] &&
-							board[row][col] == board[row-2][col+2] && board[row][col] == board[row-3][col+1]) {
+							board[row][col] == board[row-2][col+2] && board[row][col] == board[row-3][col+3]) {
 						isWin = true;
 						setWinner(board[row][col]);
 						return isWin;
