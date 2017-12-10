@@ -169,7 +169,7 @@ public class ai_genetic_thingy {
 					columnChoice = Integer.parseInt(s.nextLine()) - 1;
 				}
 				columnChoice = this.generateComputerMove();
-				while (!gameBoard.computerMove(columnChoice)) {
+				while (gameBoard.computerMove(columnChoice)) {
 					columnChoice = this.generateComputerMove();
 				}
 			} else {
@@ -178,6 +178,8 @@ public class ai_genetic_thingy {
 		}
 		
 		char winner = gameBoard.getWinner();
+		
+		displayBoard(gameBoard);
 		
 		if (winner == 'B') {
 			System.out.println("Congratulations Black Player");
