@@ -54,10 +54,11 @@ public class ai_genetic_thingy {
 			// Check for horizontal wins
 			for (int row = 0; row < 6; row++) {
 				for (int col = 0; col < 4; col++) {
-					if (board[row][col] == board[row][col+1] && board[row][col] == board[row][col+2] && 
-					board[row][col] == board[row][col+3]) {
+					if (board[row][col] != '*' && board[row][col] == board[row][col+1] &&
+							board[row][col] == board[row][col+2] && board[row][col] == board[row][col+3]) {
 						isWin = true;
 						setWinner(board[row][col]);
+						return isWin;
 					}
 				}
 			}
@@ -65,10 +66,11 @@ public class ai_genetic_thingy {
 			// Check for vertical wins
 			for (int col = 0; col < 7; col++) {
 				for (int row = 0; col < 3; col++) {
-					if (board[row][col] == board[row+1][col] && board[row][col] == board[row+2][col] && 
-							board[row][col] == board[row+3][col]) {
+					if (board[row][col] != '*' && board[row][col] == board[row+1][col] && 
+							board[row][col] == board[row+2][col] && board[row][col] == board[row+3][col]) {
 						isWin = true;
 						setWinner(board[row][col]);
+						return isWin;
 					}
 				}
 			}
@@ -76,10 +78,11 @@ public class ai_genetic_thingy {
 			// Check for descending diagonal wins
 			for (int row = 0; row < 3; row++) {
 				for (int col = 0; col < 4; col++) {
-					if (board[row][col] == board[row+1][col+1] && board[row][col] == board[row+2][col+2] &&
-							board[row][col] == board[row+3][col+3]) {
+					if (board[row][col] != '*' && board[row][col] == board[row+1][col+1] && 
+							board[row][col] == board[row+2][col+2] && board[row][col] == board[row+3][col+3]) {
 						isWin = true;
 						setWinner(board[row][col]);
+						return isWin;
 					}
 				}
 			}
@@ -87,10 +90,11 @@ public class ai_genetic_thingy {
 			// Check for ascending diagonal wins
 			for (int col= 0; col < 3; col++) {
 				for (int row = 5; row > 2; row--) {
-					if (board[row][col] == board[row-1][col+1] && board[row][col] == board[row-2][col+2] &&
-							board[row][col] == board[row-3][col+1]) {
+					if (board[row][col] != '*' && board[row][col] == board[row-1][col+1] &&
+							board[row][col] == board[row-2][col+2] && board[row][col] == board[row-3][col+1]) {
 						isWin = true;
 						setWinner(board[row][col]);
+						return isWin;
 					}
 				}
 			}
@@ -116,7 +120,7 @@ public class ai_genetic_thingy {
 		
 		public char getWinner() {
 			
-			return 'b';
+			return winner;
 		}
 		
 		public void setWinner(char winner) {
