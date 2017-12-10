@@ -65,7 +65,7 @@ public class ai_genetic_thingy {
 			
 			// Check for vertical wins
 			for (int col = 0; col < 7; col++) {
-				for (int row = 0; col < 3; col++) {
+				for (int row = 0; row < 3; row++) {
 					if (board[row][col] != '*' && board[row][col] == board[row+1][col] && 
 							board[row][col] == board[row+2][col] && board[row][col] == board[row+3][col]) {
 						isWin = true;
