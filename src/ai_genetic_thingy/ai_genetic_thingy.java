@@ -256,6 +256,7 @@ public class ai_genetic_thingy {
 			System.out.println("Congratulations Red Player");
 		}
 		
+		s.close();
 	}
 	
 	public Board generateComputerMove(Board gameBoard) {
