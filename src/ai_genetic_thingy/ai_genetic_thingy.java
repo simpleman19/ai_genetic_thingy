@@ -19,6 +19,7 @@ public class ai_genetic_thingy {
 		
 		char[][] board = new char[6][7];
 		char winner;
+		int heuristic;
 		
 		public Board() {
 			for (int i = 0; i < 6;  i++) {
@@ -132,9 +133,57 @@ public class ai_genetic_thingy {
 			this.winner = winner;
 		}
 		
-		public int heuristic() {
+		public int recalculateHeuristic() {
+			// Adds 5 points for two-in-a-row
+			// Three-in-a-row is two two-in-a-rows
+			// Adds Integer.MAX_VALUE for win
+			int sum = 0;
 			
-			return 0;
+			if (this.isWinner()) {
+				if (this.isWinner()) {
+					return Integer.MAX_VALUE;
+				}
+				else {
+					// Check for horizontal two-in-a-rows
+					for (int row = 0; row < 6; row++) {
+						for (int col = 0; col < 6; col++) {
+							if (board[row][col] != '*' && board[row][col] == board[row][col+1]) {
+								sum += 5;
+							}
+						}
+					}
+
+					// Check for vertical two-in-a-rows
+					for (int col = 0; col < 7; col++) {
+						for (int row = 0; row < 5; row++) {
+							if (board[row][col] != '*' && board[row][col] == board[row+1][col]) {
+								sum += 5;
+							}
+						}
+					}
+					
+					// Check for descending diagonal two-in-a-rows
+					for (int row = 0; row < 5; row++) {
+						for (int col = 0; col < 6; col++) {
+							if (board[row][col] != '*' && board[row][col] == board[row+1][col+1]) {
+								sum += 5;
+							}
+						}
+					}
+					
+					// Check for ascending diagonal wins
+					for (int col= 0; col < 6; col++) {
+						for (int row = 5; row > 0; row--) {
+							if (board[row][col] != '*' && board[row][col] == board[row-1][col+1]) {
+								sum += 5;
+							}
+						}
+					}
+				}
+			}
+			this.heuristic = sum;
+			
+			return sum;
 		}
 		
 		public char[][] toArray() {
@@ -255,13 +304,14 @@ public class ai_genetic_thingy {
 		} else if (winner == 'R') {
 			System.out.println("Congratulations Red Player");
 		}
-		
+
 		s.close();
 	}
 	
 	public Board generateComputerMove(Board gameBoard) {
 		Random rand = new Random(System.currentTimeMillis());
 		
+<<<<<<< HEAD
 <<<<<<< HEAD
 		int columnChoice = rand.nextInt(7);
 		while (!gameBoard.computerMove(columnChoice)) {
@@ -270,6 +320,11 @@ public class ai_genetic_thingy {
 		
 		return gameBoard.deepClone();
 =======
+=======
+		// Human: +
+		// AI: -
+		
+>>>>>>> Updated heuristic
 		// minimax
 		
 		return rand.nextInt(7);
