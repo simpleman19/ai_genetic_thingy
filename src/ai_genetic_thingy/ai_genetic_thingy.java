@@ -169,7 +169,7 @@ public class ai_genetic_thingy {
 					columnChoice = Integer.parseInt(s.nextLine()) - 1;
 				}
 				columnChoice = this.generateComputerMove();
-				while (gameBoard.computerMove(columnChoice)) {
+				while (!gameBoard.computerMove(columnChoice)) {
 					columnChoice = this.generateComputerMove();
 				}
 			} else {
