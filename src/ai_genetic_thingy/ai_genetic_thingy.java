@@ -1,6 +1,8 @@
 package ai_genetic_thingy;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -12,6 +14,8 @@ public class ai_genetic_thingy {
 		// Blank is *
 		// Black is B
 		// Red is R
+		// Human +
+		// Computer -
 		
 		char[][] board = new char[6][7];
 		char winner;
@@ -146,19 +150,60 @@ public class ai_genetic_thingy {
 	}
 	
 	private class Genetic {
-		ArrayList<Board> rCurrentBest;
-		ArrayList<Board> bCurrentBest;
+		ArrayList<Integer> hCurrentBest;
+		ArrayList<Integer> cCurrentBest;
 		
 		public Genetic() {
-			rCurrentBest = new ArrayList<Board>();
+			hCurrentBest = new ArrayList<Integer>();
+			cCurrentBest = new ArrayList<Integer>();
 		}
 		
-		public Board[] generateComputer() {
+		public Board[] generateComputer(Board gameBoard, int keep, int count) {
+			ArrayList<Board> boards = generate(gameBoard, cCurrentBest, keep, count, -1);
+			
+			return boards.toArray(new Board[cCurrentBest.size()]);
+		}
+		
+		public Board[] generateHuman(Board gameBoard, int keep, int count) {
+			ArrayList<Board> boards = generate(gameBoard, hCurrentBest, keep, count, 1);
+			
+			return boards.toArray(new Board[hCurrentBest.size()]);
+		}
+		
+		private ArrayList<Board> generate(Board gameBoard, ArrayList<Integer> moves, int keep, int count, int playerMove) {
+			
+			PriorityQueue<Board> generated = new PriorityQueue<Board>();
+			
+			Board tempBoard;
+			
+			for (int move: moves) {
+				tempBoard = gameBoard.deepClone();
+				if (playerMove > 0) {
+					tempBoard.humanMove(move);
+				} else {
+					tempBoard.computerMove(move);
+				}
+				generated.add(tempBoard);
+			}
+			
+			
 			return null;
 		}
 		
-		public Board[] generateHuman() {
-			return null;
+	}
+	
+	private class BoardComparator implements Comparator<Object> {
+		public int compare(Object o1, Object o2) {
+			Board b1 = (Board) o1;
+			Board b2 = (Board) o2;
+			
+			if (b1.heuristic > b2.heuristic) {
+				return 1;
+			} else if (b1.heuristic < b2.heuristic) {
+				return -1;
+			} else {
+				return 0;
+			}
 		}
 	}
 	
