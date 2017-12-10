@@ -311,24 +311,12 @@ public class ai_genetic_thingy {
 	public Board generateComputerMove(Board gameBoard) {
 		Random rand = new Random(System.currentTimeMillis());
 		
-<<<<<<< HEAD
-<<<<<<< HEAD
 		int columnChoice = rand.nextInt(7);
 		while (!gameBoard.computerMove(columnChoice)) {
 			columnChoice = rand.nextInt(7);
 		}
 		
 		return gameBoard.deepClone();
-=======
-=======
-		// Human: +
-		// AI: -
-		
->>>>>>> Updated heuristic
-		// minimax
-		
-		return rand.nextInt(7);
->>>>>>> added comment
 	}
 	
 	public static void displayBoard(Board board) {
