@@ -151,10 +151,13 @@ public class ai_genetic_thingy {
 		
 		public Genetic() {
 			rCurrentBest = new ArrayList<Board>();
-			bCurrentBest = new ArrayList<Board>();
 		}
 		
-		public Board[] generateRed() {
+		public Board[] generateComputer() {
+			return null;
+		}
+		
+		public Board[] generateHuman() {
 			return null;
 		}
 	}
