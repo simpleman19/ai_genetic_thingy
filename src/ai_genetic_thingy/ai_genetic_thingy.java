@@ -18,13 +18,19 @@ public class ai_genetic_thingy {
 		}
 		
 		public boolean isWinner() {
-			
 			return false;
 		}
 		
+		public boolean isDraw() {
+			return false;
+		}
 		public char getWinner() {
 			
 			return 'b';
+		}
+		
+		public int heuristic() {
+			return 0;
 		}
 	}
 	
