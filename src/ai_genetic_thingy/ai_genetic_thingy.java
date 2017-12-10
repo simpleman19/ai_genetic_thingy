@@ -154,7 +154,9 @@ public class ai_genetic_thingy {
 			bCurrentBest = new ArrayList<Board>();
 		}
 		
-		
+		public Board[] generateRed() {
+			return null;
+		}
 	}
 	
 	public static void main(String [] args) {
@@ -189,10 +191,7 @@ public class ai_genetic_thingy {
 					System.out.print("Could not move in column " + columnChoice + " input the column you wish to play in: ");
 					columnChoice = Integer.parseInt(s.nextLine()) - 1;
 				}
-				columnChoice = this.generateComputerMove();
-				while (!gameBoard.computerMove(columnChoice)) {
-					columnChoice = this.generateComputerMove();
-				}
+				gameBoard = generateComputerMove(gameBoard);
 			} else {
 				System.out.println("Invalid Column");
 			}
@@ -210,10 +209,15 @@ public class ai_genetic_thingy {
 		
 	}
 	
-	public int generateComputerMove() {
+	public Board generateComputerMove(Board gameBoard) {
 		Random rand = new Random(System.currentTimeMillis());
 		
-		return rand.nextInt(7);
+		int columnChoice = rand.nextInt(7);
+		while (!gameBoard.computerMove(columnChoice)) {
+			columnChoice = rand.nextInt(7);
+		}
+		
+		return gameBoard.deepClone();
 	}
 	
 	public static void displayBoard(Board board) {
