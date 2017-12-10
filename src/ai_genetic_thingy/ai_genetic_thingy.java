@@ -1,5 +1,6 @@
 package ai_genetic_thingy;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -134,6 +135,26 @@ public class ai_genetic_thingy {
 		public char[][] toArray() {
 			return this.board;
 		}
+		
+		public Board deepClone() {
+			Board newBoard = new Board();
+			for(int i = 0; i < board.length; i++) {
+				newBoard.board[i] = board[i].clone();
+			}
+			return newBoard;
+		}
+	}
+	
+	private class Genetic {
+		ArrayList<Board> rCurrentBest;
+		ArrayList<Board> bCurrentBest;
+		
+		public Genetic() {
+			rCurrentBest = new ArrayList<Board>();
+			bCurrentBest = new ArrayList<Board>();
+		}
+		
+		
 	}
 	
 	public static void main(String [] args) {
