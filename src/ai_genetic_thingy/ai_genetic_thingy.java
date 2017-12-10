@@ -171,7 +171,7 @@ public class ai_genetic_thingy {
 						}
 					}
 					
-					// Check for ascending diagonal wins
+					// Check for ascending diagonal two-in-a-rows
 					for (int col= 0; col < 6; col++) {
 						for (int row = 5; row > 0; row--) {
 							if (board[row][col] != '*' && board[row][col] == board[row-1][col+1]) {
