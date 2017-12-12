@@ -51,6 +51,8 @@ public class ai_genetic_thingy {
 				}
 			}
 			
+			this.recalculateHeuristic();
+			
 			return inserted;
 		}
 		
@@ -195,6 +197,9 @@ public class ai_genetic_thingy {
 			for(int i = 0; i < board.length; i++) {
 				newBoard.board[i] = board[i].clone();
 			}
+			
+			newBoard.recalculateHeuristic();
+			
 			return newBoard;
 		}
 	}
@@ -222,13 +227,13 @@ public class ai_genetic_thingy {
 		
 		private ArrayList<Board> generate(Board gameBoard, ArrayList<Integer> moves, int keep, int count, int playerMove) {
 			
-			PriorityQueue<Board> generated = new PriorityQueue<Board>();
+			PriorityQueue<Board> generated = new PriorityQueue<Board>(150, new BoardComparator());
 			
 			Board tempBoard;
 			
 			for (int move: moves) {
 				tempBoard = gameBoard.deepClone();
-				if (playerMove > 0) {
+				if (playerMove > 0) {					
 					tempBoard.humanMove(move);
 				} else {
 					tempBoard.computerMove(move);
@@ -236,10 +241,8 @@ public class ai_genetic_thingy {
 				generated.add(tempBoard);
 			}
 			
-			
 			return null;
 		}
-		
 	}
 	
 	private class BoardComparator implements Comparator<Object> {
