@@ -20,6 +20,7 @@ public class ai_genetic_thingy {
 		char[][] board = new char[6][7];
 		char winner;
 		int heuristic;
+		int previousMove;
 		
 		public Board() {
 			for (int i = 0; i < 6;  i++) {
@@ -29,11 +30,13 @@ public class ai_genetic_thingy {
 			}
 		}
 		
-		public boolean humanMove(int col) {			
+		public boolean humanMove(int col) {	
+			previousMove = col;
 			return move(col, humanColor);
 		}
 		
 		public boolean computerMove(int col) {
+			previousMove = col;
 			if (humanColor == 'B') {
 				return move(col, 'R');
 			} else {
@@ -207,27 +210,31 @@ public class ai_genetic_thingy {
 	private class Genetic {
 		ArrayList<Integer> hCurrentBest;
 		ArrayList<Integer> cCurrentBest;
+		Random rand;
 		
 		public Genetic() {
 			hCurrentBest = new ArrayList<Integer>();
 			cCurrentBest = new ArrayList<Integer>();
+			rand = new Random(System.currentTimeMillis());
 		}
 		
 		public Board[] generateComputer(Board gameBoard, int keep, int count) {
-			ArrayList<Board> boards = generate(gameBoard, cCurrentBest, keep, count, -1);
-			
-			return boards.toArray(new Board[boards.size()]);
+			PriorityQueue<Board> boards = generate(gameBoard, cCurrentBest, count, -1);
+			ArrayList<Board> culledBoards = cullList(boards, keep);
+			cCurrentBest = getMoves(culledBoards);
+			return culledBoards.toArray(new Board[culledBoards.size()]);
 		}
 		
 		public Board[] generateHuman(Board gameBoard, int keep, int count) {
-			ArrayList<Board> boards = generate(gameBoard, hCurrentBest, keep, count, 1);
-			
-			return boards.toArray(new Board[boards.size()]);
+			PriorityQueue<Board> boards = generate(gameBoard, hCurrentBest, count, 1);
+			ArrayList<Board> culledBoards = cullList(boards, keep);
+			cCurrentBest = getMoves(culledBoards);
+			return culledBoards.toArray(new Board[culledBoards.size()]);
 		}
 		
-		private ArrayList<Board> generate(Board gameBoard, ArrayList<Integer> moves, int keep, int count, int playerMove) {
+		private PriorityQueue<Board> generate(Board gameBoard, ArrayList<Integer> moves, int count, int playerMove) {
 			
-			PriorityQueue<Board> generated = new PriorityQueue<Board>(150, new BoardComparator());
+			PriorityQueue<Board> generated = new PriorityQueue<Board>(count + 5, new BoardComparator((playerMove > 0) ? false : true));
 			
 			Board tempBoard;
 			
@@ -241,7 +248,51 @@ public class ai_genetic_thingy {
 				generated.add(tempBoard);
 			}
 			
-			return cullList(generated, keep);
+			for (int i = 0; i < (count - moves.size()); i++) {
+				tempBoard = gameBoard.deepClone();
+				if (playerMove > 0) {					
+					tempBoard.humanMove(genetic(moves));
+				} else {
+					tempBoard.computerMove(genetic(moves));
+				}
+				generated.add(tempBoard);
+			}
+			
+			return generated;
+		}
+		
+		private int genetic(ArrayList<Integer> moves) {
+			int decision = rand.nextInt(3);
+			int move = 0;
+			
+			switch (decision) {
+				case 0:
+					// Get center between 2 moves
+					move = center(moves.get(rand.nextInt(moves.size())), moves.get(rand.nextInt(moves.size())));
+					break;
+				case 1:
+					move = rand.nextInt(7);
+					break;
+				case 2:
+					move = moves.get(rand.nextInt(moves.size())) + rand.nextInt(7) % 7;
+					break;
+			}
+			
+			return move;
+		}
+		
+		private int center(int num1, int num2) {
+			return (int) Math.round((num2 - num1) / 2.0 + num1);
+		}
+		
+		private ArrayList<Integer> getMoves(ArrayList<Board> boards) {
+			ArrayList<Integer> moves = new ArrayList<Integer>();
+			
+			for (Board board: boards) {
+				moves.add(board.previousMove);
+			}
+			
+			return moves;
 		}
 		
 		private ArrayList<Board> cullList(PriorityQueue<Board> boards, int number) {
