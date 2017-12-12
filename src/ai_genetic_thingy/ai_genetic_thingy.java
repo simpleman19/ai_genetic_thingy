@@ -216,13 +216,13 @@ public class ai_genetic_thingy {
 		public Board[] generateComputer(Board gameBoard, int keep, int count) {
 			ArrayList<Board> boards = generate(gameBoard, cCurrentBest, keep, count, -1);
 			
-			return boards.toArray(new Board[cCurrentBest.size()]);
+			return boards.toArray(new Board[boards.size()]);
 		}
 		
 		public Board[] generateHuman(Board gameBoard, int keep, int count) {
 			ArrayList<Board> boards = generate(gameBoard, hCurrentBest, keep, count, 1);
 			
-			return boards.toArray(new Board[hCurrentBest.size()]);
+			return boards.toArray(new Board[boards.size()]);
 		}
 		
 		private ArrayList<Board> generate(Board gameBoard, ArrayList<Integer> moves, int keep, int count, int playerMove) {
@@ -241,19 +241,39 @@ public class ai_genetic_thingy {
 				generated.add(tempBoard);
 			}
 			
-			return null;
+			return cullList(generated, keep);
+		}
+		
+		private ArrayList<Board> cullList(PriorityQueue<Board> boards, int number) {
+			ArrayList<Board> list = new ArrayList<Board>();
+			
+			for (int i = 0; i < number; i++) {
+				list.add(boards.remove());
+			}
+			
+			return list;
 		}
 	}
 	
 	private class BoardComparator implements Comparator<Object> {
+		boolean reverse = false;
+		
+		public BoardComparator() {
+			reverse = false;
+		}
+		
+		public BoardComparator(boolean reverse) {
+			this.reverse = reverse;
+		}
+		
 		public int compare(Object o1, Object o2) {
 			Board b1 = (Board) o1;
 			Board b2 = (Board) o2;
 			
 			if (b1.heuristic > b2.heuristic) {
-				return 1;
+				return (reverse) ? -1 : 1;
 			} else if (b1.heuristic < b2.heuristic) {
-				return -1;
+				return (reverse) ? 1 : -1;
 			} else {
 				return 0;
 			}
