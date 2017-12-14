@@ -261,8 +261,8 @@ public class ai_genetic_thingy {
 	}
 	
 	private class Genetic {
-		ArrayList<Integer> hCurrentBest;
-		ArrayList<Integer> cCurrentBest;
+		public ArrayList<Integer> hCurrentBest;
+		public ArrayList<Integer> cCurrentBest;
 		Random rand;
 		
 		public Genetic() {
@@ -274,14 +274,28 @@ public class ai_genetic_thingy {
 		public Board[] generateComputer(Board gameBoard, int keep, int count) {
 			PriorityQueue<Board> boards = generate(gameBoard, cCurrentBest, count, -1);
 			ArrayList<Board> culledBoards = cullList(boards, keep);
-			cCurrentBest = getMoves(culledBoards);
+			ArrayList<Integer> currentBest = getMoves(culledBoards);
+			
+			for (Board board : culledBoards) {
+				board.genetic = new Genetic();
+				board.genetic.hCurrentBest = currentBest;
+				board.genetic.cCurrentBest = this.cCurrentBest;
+			}
+			
 			return culledBoards.toArray(new Board[culledBoards.size()]);
 		}
 		
 		public Board[] generateHuman(Board gameBoard, int keep, int count) {
 			PriorityQueue<Board> boards = generate(gameBoard, hCurrentBest, count, 1);
 			ArrayList<Board> culledBoards = cullList(boards, keep);
-			cCurrentBest = getMoves(culledBoards);
+			ArrayList<Integer> currentBest = getMoves(culledBoards);
+			
+			for (Board board : culledBoards) {
+				board.genetic = new Genetic();
+				board.genetic.cCurrentBest = currentBest;
+				board.genetic.hCurrentBest = this.hCurrentBest;
+			}
+			
 			return culledBoards.toArray(new Board[culledBoards.size()]);
 		}
 		
