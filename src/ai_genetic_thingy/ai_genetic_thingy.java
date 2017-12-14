@@ -207,6 +207,49 @@ public class ai_genetic_thingy {
 		}
 	}
 	
+	private class Node {
+		private Board board;
+		private Node parent;
+		
+		PriorityQueue<Node> children = new PriorityQueue<Node>(11, new Comparator<Node>() {
+			public int compare(Node i, Node j) {
+				if(i.board.heuristic > j.board.heuristic) {
+					return 1;
+				}
+				else if (i.board.heuristic < j.board.heuristic) {
+					return -1;
+				}
+				else {
+					return 0;
+				}
+			}
+		});
+		
+		public Node() {
+			parent = null;
+		}
+		
+		public Node(Board board) {
+			this.board = board;
+		}
+
+		public Board getBoard() {
+			return this.board;
+		}
+		
+		public void setBoard(Board board) {
+			this.board = board;
+		}
+		
+		public Node getParent() {
+			return this.parent;
+		}
+		
+		public void setParent(Node parent) {
+			this.parent = parent;
+		}
+	}
+	
 	private class Genetic {
 		ArrayList<Integer> hCurrentBest;
 		ArrayList<Integer> cCurrentBest;
@@ -382,15 +425,36 @@ public class ai_genetic_thingy {
 		s.close();
 	}
 	
-	public Board generateComputerMove(Board gameBoard) {
-		Random rand = new Random(System.currentTimeMillis());
+	public Board generateComputerMove(Board board) {
+//		Random rand = new Random(System.currentTimeMillis());
+//		
+//		int columnChoice = rand.nextInt(7);
+//		while (!gameBoard.computerMove(columnChoice)) {
+//			columnChoice = rand.nextInt(7);
+//		}
+		Board computerMove = null;
+		Node curNode = new Node();
+		int maxDepth = 4;
+		int curDepth = 0;
 		
-		int columnChoice = rand.nextInt(7);
-		while (!gameBoard.computerMove(columnChoice)) {
-			columnChoice = rand.nextInt(7);
-		}
+		Node rootNode = new Node(board);
 		
-		return gameBoard.deepClone();
+//		// if winning AI move is available
+//		if (rootNode.children.peek().board.heuristic == Integer.MIN_VALUE) {
+//			computerMove = rootNode.children.poll().board;
+//		}
+//		else {
+//			for (int i = 0; i < rootNode.children.size(); i++) {
+//				
+//				for (int j = 0; j < rootNode.children.)
+//			}
+//		}
+//		
+//		if (curDepth == maxDepth) {
+//			
+//		}
+//		
+//		return computerMove;
 	}
 	
 	public static void displayBoard(Board board) {
