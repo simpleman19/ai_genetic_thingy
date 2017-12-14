@@ -221,20 +221,21 @@ public class ai_genetic_thingy {
 	private class Node {
 		private Board board;
 		private Node parent;
-		
-		PriorityQueue<Node> children = new PriorityQueue<Node>(11, new Comparator<Node>() {
-			public int compare(Node i, Node j) {
-				if(i.board.heuristic > j.board.heuristic) {
-					return 1;
-				}
-				else if (i.board.heuristic < j.board.heuristic) {
-					return -1;
-				}
-				else {
-					return 0;
-				}
-			}
-		});
+		private Node children[];
+		int minMaxValue;
+//		PriorityQueue<Node> children = new PriorityQueue<Node>(11, new Comparator<Node>() {
+//			public int compare(Node i, Node j) {
+//				if(i.board.heuristic > j.board.heuristic) {
+//					return 1;
+//				}
+//				else if (i.board.heuristic < j.board.heuristic) {
+//					return -1;
+//				}
+//				else {
+//					return 0;
+//				}
+//			}
+//		});
 		
 		public Node() {
 			parent = null;
@@ -451,18 +452,86 @@ public class ai_genetic_thingy {
 	}
 	
 	public Board generateComputerMove(Board board) {
-//		Random rand = new Random(System.currentTimeMillis());
-//		
-//		int columnChoice = rand.nextInt(7);
-//		while (!gameBoard.computerMove(columnChoice)) {
-//			columnChoice = rand.nextInt(7);
-//		}
+		int count = 100;
+		int keep = 10;
+		
 		Board computerMove = null;
 		Node curNode = new Node();
 		int maxDepth = 4;
 		int curDepth = 0;
+		Genetic genetic = new Genetic();
+		Board temp1[], temp2[], temp3[], temp4[];
 		
 		Node rootNode = new Node(board);
+		curNode = rootNode;
+		temp1 = genetic.generateComputer(board, keep, count);	// store boards in temp board array
+		curNode.children = new Node[temp1.length];	// set node array size to temp array size
+		for (int i = 0; i < temp1.length; i++) {		// generate depth 1 children nodes
+			curNode.children[i] = new Node(temp1[i]);
+			curNode.children[i].parent = curNode;
+			temp2 = genetic.generateHuman(curNode.children[i].getBoard(), keep, count);
+			
+			for (int j = 0; j < temp2.length; j++) {	// generate depth 2 children
+				curNode.children[i].children[j] = new Node(temp2[j]);
+				curNode.children[i].children[j].parent = curNode.children[i];
+				temp3 = genetic.generateComputer(curNode.children[i].children[j].getBoard(), keep, count);
+				
+				for (int k = 0; k < temp3.length; k++) {	// generate depth 3 children
+					curNode.children[i].children[j].children[k] = new Node(temp3[k]);
+					curNode.children[i].children[j].children[k].parent = curNode.children[i].children[j];
+					temp4 = genetic.generateHuman(curNode.children[i].children[j].children[k].getBoard(), keep, count);
+					
+					for (int l = 0; l < temp4.length; l++) {	// generate depth 4 children
+						curNode.children[i].children[j].children[k].children[l] = new Node(temp4[l]);
+						curNode.children[i].children[j].children[k].children[l].parent = curNode.children[i].children[j].children[k];
+						temp4 = genetic.generateComputer(curNode.children[i].children[j].children[k].children[l].getBoard(), keep, count);
+					}
+				}
+			}
+		}
+		
+		// heuristic calculation of leaves
+//		for (int i = 0; i < rootNode.children.length; i++) {
+//			for (int j = 0; j < rootNode.children[i].children.length; j++) {
+//				for (int k = 0; k < rootNode.children[i].children[j].children.length; k++) {
+//					for (int l = 0; l < rootNode.children[i].children[j].children[k].children.length; l++) {
+//						rootNode.children[i].children[j].children[k].children[l].board.recalculateHeuristic();
+//					}	
+//				}	
+//			}
+//		}
+		
+		// min/max
+		int max = 0;
+		int min = rootNode.children[0].getBoard().heuristic;
+		for (int i = 0; i < rootNode.children.length; i++) {
+			max = rootNode.children[i].children[0].getBoard().heuristic;
+			for (int j = 0; j < rootNode.children[i].children.length; j++) {
+				min = rootNode.children[i].children[j].children[0].getBoard().heuristic;
+				for (int k = 0; k < rootNode.children[i].children[j].children.length; k++) {
+					max = rootNode.children[i].children[j].children[k].children[0].getBoard().heuristic;
+					for (int l = 0; l < rootNode.children[i].children[j].children[k].children.length; l++) {
+						if (rootNode.children[i].children[j].children[k].children[l].getBoard().heuristic > max) {
+							max = rootNode.children[i].children[j].children[k].children[l].getBoard().heuristic;
+						}
+					}
+					rootNode.children[i].children[j].children[k].minMaxValue = max;
+					if (rootNode.children[i].children[j].children[k].getBoard().heuristic < min) {
+						min = rootNode.children[i].children[j].children[k].getBoard().heuristic;
+					}
+				}
+				rootNode.children[i].children[j].minMaxValue = min;
+				if (rootNode.children[i].children[j].getBoard().heuristic > max) {
+					max = rootNode.children[i].children[j].getBoard().heuristic;
+				}
+			}
+			rootNode.children[i].minMaxValue = max;
+			if (rootNode.children[i].getBoard().heuristic < min) {
+				min = rootNode.children[i].getBoard().heuristic;
+				computerMove = rootNode.children[i].getBoard();
+			}
+		}
+		
 		
 //		// if winning AI move is available
 //		if (rootNode.children.peek().board.heuristic == Integer.MIN_VALUE) {
@@ -479,7 +548,7 @@ public class ai_genetic_thingy {
 //			
 //		}
 //		
-//		return computerMove;
+		return computerMove;
 	}
 	
 	public static void displayBoard(Board board) {
