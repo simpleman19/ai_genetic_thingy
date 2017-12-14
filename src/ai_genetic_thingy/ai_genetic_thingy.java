@@ -1,6 +1,7 @@
 package ai_genetic_thingy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Random;
@@ -47,6 +48,7 @@ public class ai_genetic_thingy {
 		}
 		
 		private boolean move(int col, char player) {
+			col = col % 7;B
 			boolean inserted = false;
 			
 			for (int i = board.length - 1; i >= 0 && !inserted; i--) {
@@ -268,9 +270,14 @@ public class ai_genetic_thingy {
 		Random rand;
 		
 		public Genetic() {
+			rand = new Random(System.currentTimeMillis());
 			hCurrentBest = new ArrayList<Integer>();
 			cCurrentBest = new ArrayList<Integer>();
-			rand = new Random(System.currentTimeMillis());
+			for (int i = 0; i < 10; i++) {
+				hCurrentBest.add(rand.nextInt(7));
+				cCurrentBest.add(rand.nextInt(7));
+			}
+			
 		}
 		
 		public Board[] generateComputer(Board gameBoard, int keep, int count) {
@@ -351,7 +358,7 @@ public class ai_genetic_thingy {
 		}
 		
 		private int center(int num1, int num2) {
-			return (int) Math.round((num2 - num1) / 2.0 + num1);
+			return (int) Math.round((num2 - num1) / 2.0 + num1) % 7;
 		}
 		
 		private ArrayList<Integer> getMoves(ArrayList<Board> boards) {
