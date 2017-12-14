@@ -212,6 +212,7 @@ public class ai_genetic_thingy {
 			}
 			
 			newBoard.recalculateHeuristic();
+			newBoard.previousMove = this.previousMove;
 			
 			return newBoard;
 		}
