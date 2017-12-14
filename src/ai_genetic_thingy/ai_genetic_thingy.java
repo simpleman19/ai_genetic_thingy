@@ -21,6 +21,7 @@ public class ai_genetic_thingy {
 		char winner;
 		int heuristic;
 		int previousMove;
+		Genetic genetic;
 		
 		public Board() {
 			for (int i = 0; i < 6;  i++) {
@@ -28,6 +29,7 @@ public class ai_genetic_thingy {
 					board[i][j] = '*';
 				}
 			}
+			genetic = new Genetic();
 		}
 		
 		public boolean humanMove(int col) {	
@@ -57,6 +59,14 @@ public class ai_genetic_thingy {
 			this.recalculateHeuristic();
 			
 			return inserted;
+		}
+		
+		public Board[] generate(int keep, int count, boolean humanMove) {
+			if (humanMove) {
+				return genetic.generateHuman(this, keep, count);
+			} else {
+				return genetic.generateComputer(this, keep, count);
+			}
 		}
 		
 		public boolean isWinner() {
