@@ -48,7 +48,6 @@ public class ai_genetic_thingy {
 		}
 		
 		private boolean move(int col, char player) {
-			col = col % 7;
 			boolean inserted = false;
 			
 			for (int i = board.length - 1; i >= 0 && !inserted; i--) {
@@ -459,7 +458,7 @@ public class ai_genetic_thingy {
 	}
 	
 	public Board generateComputerMove(Board board) {
-		int count = 100;
+		int count = 60;
 		int keep = 10;
 		
 		Board computerMove = null;
@@ -471,30 +470,30 @@ public class ai_genetic_thingy {
 		
 		Node rootNode = new Node(board);
 		curNode = rootNode;
-		temp1 = genetic.generateComputer(board, keep, count);	// store boards in temp board array
+		temp1 = rootNode.board.generate(keep, count, false);
 		curNode.children = new Node[temp1.length];	// set node array size to temp array size
 		for (int i = 0; i < temp1.length; i++) {		// generate depth 1 children nodes
 			curNode.children[i] = new Node(temp1[i]);
 			curNode.children[i].parent = curNode;
-			temp2 = genetic.generateHuman(curNode.children[i].getBoard(), keep, count);
+			temp2 = curNode.board.generate(keep, count, true);
 			curNode.children[i].children = new Node[temp2.length];
 			
 			for (int j = 0; j < temp2.length; j++) {	// generate depth 2 children
 				curNode.children[i].children[j] = new Node(temp2[j]);
 				curNode.children[i].children[j].parent = curNode.children[i];
-				temp3 = genetic.generateComputer(curNode.children[i].children[j].getBoard(), keep, count);
+				temp3 = curNode.board.generate(keep, count, false);
 				curNode.children[i].children[j].children = new Node[temp3.length];
 				
 				for (int k = 0; k < temp3.length; k++) {	// generate depth 3 children
 					curNode.children[i].children[j].children[k] = new Node(temp3[k]);
 					curNode.children[i].children[j].children[k].parent = curNode.children[i].children[j];
-					temp4 = genetic.generateHuman(curNode.children[i].children[j].children[k].getBoard(), keep, count);
+					temp4 = curNode.board.generate(keep, count, true);
 					curNode.children[i].children[j].children[k].children = new Node[temp4.length];
 					
 					for (int l = 0; l < temp4.length; l++) {	// generate depth 4 children
 						curNode.children[i].children[j].children[k].children[l] = new Node(temp4[l]);
 						curNode.children[i].children[j].children[k].children[l].parent = curNode.children[i].children[j].children[k];
-						temp5 = genetic.generateComputer(curNode.children[i].children[j].children[k].children[l].getBoard(), keep, count);
+						temp5 = curNode.board.generate(keep, count, false);
 					}
 				}
 			}
@@ -536,7 +535,7 @@ public class ai_genetic_thingy {
 				}
 			}
 			rootNode.children[i].minMaxValue = max;
-			if (rootNode.children[i].getBoard().heuristic < min) {
+			if (rootNode.children[i].getBoard().heuristic <= min) {
 				min = rootNode.children[i].getBoard().heuristic;
 				computerMove = rootNode.children[i].getBoard();
 			}
