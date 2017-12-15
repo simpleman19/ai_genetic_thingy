@@ -500,17 +500,6 @@ public class ai_genetic_thingy {
 			}
 		}
 		
-		// heuristic calculation of leaves
-//		for (int i = 0; i < rootNode.children.length; i++) {
-//			for (int j = 0; j < rootNode.children[i].children.length; j++) {
-//				for (int k = 0; k < rootNode.children[i].children[j].children.length; k++) {
-//					for (int l = 0; l < rootNode.children[i].children[j].children[k].children.length; l++) {
-//						rootNode.children[i].children[j].children[k].children[l].board.recalculateHeuristic();
-//					}	
-//				}	
-//			}
-//		}
-		
 		// min/max
 		int max = 0;
 		int min = rootNode.children[0].getBoard().heuristic;
@@ -541,23 +530,7 @@ public class ai_genetic_thingy {
 				computerMove = rootNode.children[i].getBoard();
 			}
 		}
-		
-		
-//		// if winning AI move is available
-//		if (rootNode.children.peek().board.heuristic == Integer.MIN_VALUE) {
-//			computerMove = rootNode.children.poll().board;
-//		}
-//		else {
-//			for (int i = 0; i < rootNode.children.size(); i++) {
-//				
-//				for (int j = 0; j < rootNode.children.)
-//			}
-//		}
-//		
-//		if (curDepth == maxDepth) {
-//			
-//		}
-//		
+				
 		return computerMove;
 	}
 	
